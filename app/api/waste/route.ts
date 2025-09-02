@@ -64,14 +64,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate totals
-    const totals = entries.reduce((acc: { total_ml: number; total_cost: number }, entry: any) => {
-      acc.total_ml += entry.amount_ml;
-      acc.total_cost += entry.cost_dollars;
+    const totals = entries.rows.reduce((acc: { total_ml: number; total_cost: number }, entry: any) => {
+      acc.total_ml += parseFloat(entry.amount_ml);
+      acc.total_cost += parseFloat(entry.cost_dollars);
       return acc;
     }, { total_ml: 0, total_cost: 0 });
 
     return NextResponse.json({
-      entries,
+      entries: entries.rows,
       totals,
       period: period || 'all'
     });
