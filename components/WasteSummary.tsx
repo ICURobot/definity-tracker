@@ -103,24 +103,24 @@ export default function WasteSummary({ data, selectedPeriod, onPeriodChange, isL
 
         {/* Total Cost */}
         <div className="text-center">
-          <div className="text-3xl font-bold text-red-600">${totals.total_cost.toFixed(2)}</div>
-          <div className="text-sm text-gray-600">Waste Cost</div>
+          <div className="text-3xl font-bold text-red-600">${vials.cost.toFixed(2)}</div>
+          <div className="text-sm text-gray-600">Total Cost</div>
           <div className="text-xs text-gray-500 mt-1">
-            {vials.cost > 0 && `+ $${vials.cost.toFixed(2)} vial cost`}
+            {vials.used > 0 && `${vials.used} vial${vials.used > 1 ? 's' : ''} × $200`}
           </div>
         </div>
       </div>
 
-      {/* Total Cost Summary */}
+      {/* Waste Details */}
       {entryCount > 0 && (
         <div className="mt-6 pt-6 border-t border-gray-200">
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              ${(totals.total_cost + vials.cost).toFixed(2)}
+            <div className="text-lg font-semibold text-gray-700">
+              ${totals.total_cost.toFixed(2)}
             </div>
-            <div className="text-sm text-gray-600">Total Cost (Waste + Vials)</div>
+            <div className="text-sm text-gray-600">Waste Value</div>
             <div className="text-xs text-gray-500 mt-1">
-              ${totals.total_cost.toFixed(2)} waste + ${vials.cost.toFixed(2)} vials
+              {totals.total_ml.toFixed(1)} mL × $10/mL
             </div>
           </div>
         </div>
