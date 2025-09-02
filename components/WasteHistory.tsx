@@ -1,6 +1,8 @@
 'use client';
 
 import { format } from 'date-fns';
+import DailyBreakdown from './DailyBreakdown';
+import WasteChart from './WasteChart';
 
 interface WasteEntry {
   id: number;
@@ -14,9 +16,10 @@ interface WasteHistoryProps {
   entries: WasteEntry[];
   isLoading: boolean;
   onDeleteEntry: (id: number) => void;
+  selectedPeriod: string;
 }
 
-export default function WasteHistory({ entries, isLoading, onDeleteEntry }: WasteHistoryProps) {
+export default function WasteHistory({ entries, isLoading, onDeleteEntry, selectedPeriod }: WasteHistoryProps) {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -32,16 +35,19 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
     );
   }
 
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">All Entries</h2>
-      
-      {entries.length === 0 ? (
+  const renderContent = () => {
+    if (entries.length === 0) {
+      return (
         <div className="text-center py-8">
           <div className="text-gray-400 text-lg mb-2">📝</div>
           <p className="text-gray-500">No waste entries recorded yet</p>
         </div>
-      ) : (
+      );
+    }
+
+    // For daily view, show simple list
+    if (selectedPeriod === 'daily') {
+      return (
         <div className="space-y-3">
           {entries.map((entry) => (
             <div
@@ -56,9 +62,6 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
                       : 'text-gray-900'
                   }`}>
                     {entry.amount_ml === 0 ? '0 mL (No Waste)' : `${entry.amount_ml} mL`}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {format(new Date(entry.created_at), 'MMM dd, yyyy')}
                   </div>
                   <div className="text-xs text-gray-500">
                     {format(new Date(entry.created_at), 'h:mm a')}
@@ -89,7 +92,34 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
             </div>
           ))}
         </div>
-      )}
+      );
+    }
+
+    // For weekly/monthly views, show chart and daily breakdown
+    return (
+      <div className="space-y-6">
+        <WasteChart entries={entries} period={selectedPeriod} />
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Breakdown</h3>
+          <DailyBreakdown entries={entries} onDeleteEntry={onDeleteEntry} />
+        </div>
+      </div>
+    );
+  };
+
+  const getTitle = () => {
+    switch (selectedPeriod) {
+      case 'daily': return 'Today\'s Entries';
+      case 'weekly': return 'Weekly Overview';
+      case 'monthly': return 'Monthly Overview';
+      default: return 'All Entries';
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">{getTitle()}</h2>
+      {renderContent()}
     </div>
   );
 }

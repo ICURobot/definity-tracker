@@ -135,6 +135,7 @@ export default function Dashboard() {
               entries={wasteData?.entries || []} 
               isLoading={isLoading}
               onDeleteEntry={handleDeleteEntry}
+              selectedPeriod={selectedPeriod}
             />
           </div>
         </div>
