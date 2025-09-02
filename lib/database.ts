@@ -1,20 +1,25 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-
-const dbPath = path.join(process.cwd(), 'definity-tracker.db');
-const db = new Database(dbPath);
+import { sql } from '@vercel/postgres';
 
 // Initialize database tables
-export function initDatabase() {
-  // Waste entries table (simplified - no user authentication)
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS waste_entries (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      amount_ml REAL NOT NULL,
-      cost_dollars REAL NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+export async function initDatabase() {
+  try {
+    // Create waste_entries table if it doesn't exist
+    await sql`
+      CREATE TABLE IF NOT EXISTS waste_entries (
+        id SERIAL PRIMARY KEY,
+        amount_ml DECIMAL(10,2) NOT NULL,
+        cost_dollars DECIMAL(10,2) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+  } catch (error) {
+    console.error('Error initializing database:', error);
+    // In development, if database connection fails, we'll handle it gracefully
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Database connection failed in development mode. This is expected if environment variables are not set.');
+    }
+    throw error;
+  }
 }
 
-export default db;
+export { sql };

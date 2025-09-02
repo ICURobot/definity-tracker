@@ -1,51 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db, { initDatabase } from '@/lib/database';
-
-// Initialize database on first run
-initDatabase();
+import { sql, initDatabase } from '@/lib/database';
 
 // GET - Retrieve waste entries with filtering
 export async function GET(request: NextRequest) {
   try {
+    // Initialize database on first run
+    await initDatabase();
+    
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period'); // 'daily', 'weekly', 'monthly', 'all'
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
 
-    let query = `
-      SELECT 
-        *,
-        DATE(created_at) as date
-      FROM waste_entries
-    `;
-    
-    const conditions = [];
-    const params = [];
+    let entries;
 
     if (startDate && endDate) {
-      conditions.push('DATE(created_at) BETWEEN ? AND ?');
-      params.push(startDate, endDate);
+      entries = await sql`
+        SELECT 
+          *,
+          DATE(created_at) as date
+        FROM waste_entries
+        WHERE DATE(created_at) BETWEEN ${startDate} AND ${endDate}
+        ORDER BY created_at DESC
+      `;
     } else if (period === 'daily') {
       const today = new Date().toISOString().split('T')[0];
-      conditions.push('DATE(created_at) = ?');
-      params.push(today);
+      entries = await sql`
+        SELECT 
+          *,
+          DATE(created_at) as date
+        FROM waste_entries
+        WHERE DATE(created_at) = ${today}
+        ORDER BY created_at DESC
+      `;
     } else if (period === 'weekly') {
       const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-      conditions.push('DATE(created_at) >= ?');
-      params.push(weekAgo);
+      entries = await sql`
+        SELECT 
+          *,
+          DATE(created_at) as date
+        FROM waste_entries
+        WHERE DATE(created_at) >= ${weekAgo}
+        ORDER BY created_at DESC
+      `;
     } else if (period === 'monthly') {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-      conditions.push('DATE(created_at) >= ?');
-      params.push(monthStart);
+      entries = await sql`
+        SELECT 
+          *,
+          DATE(created_at) as date
+        FROM waste_entries
+        WHERE DATE(created_at) >= ${monthStart}
+        ORDER BY created_at DESC
+      `;
+    } else {
+      entries = await sql`
+        SELECT 
+          *,
+          DATE(created_at) as date
+        FROM waste_entries
+        ORDER BY created_at DESC
+      `;
     }
-
-    if (conditions.length > 0) {
-      query += ' WHERE ' + conditions.join(' AND ');
-    }
-
-    query += ' ORDER BY created_at DESC';
-
-    const entries = db.prepare(query).all(...params);
 
     // Calculate totals
     const totals = entries.reduce((acc: { total_ml: number; total_cost: number }, entry: any) => {
@@ -72,6 +88,9 @@ export async function GET(request: NextRequest) {
 // POST - Create new waste entry
 export async function POST(request: NextRequest) {
   try {
+    // Initialize database on first run
+    await initDatabase();
+    
     const { amount_ml } = await request.json();
 
     if (!amount_ml || amount_ml <= 0) {
@@ -84,15 +103,14 @@ export async function POST(request: NextRequest) {
     // Calculate cost: $10 per mL of diluted Definity
     const cost_dollars = amount_ml * 10;
 
-    const stmt = db.prepare(`
+    const result = await sql`
       INSERT INTO waste_entries (amount_ml, cost_dollars)
-      VALUES (?, ?)
-    `);
-
-    const result = stmt.run(amount_ml, cost_dollars);
+      VALUES (${amount_ml}, ${cost_dollars})
+      RETURNING id
+    `;
 
     return NextResponse.json({
-      id: result.lastInsertRowid,
+      id: result.rows[0].id,
       amount_ml,
       cost_dollars,
       message: 'Waste entry recorded successfully'
