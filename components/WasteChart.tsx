@@ -151,7 +151,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-red-500 rounded"></div>
-            <span>High waste (>15 mL)</span>
+            <span>High waste (&gt;15 mL)</span>
           </div>
         </div>
       </div>
