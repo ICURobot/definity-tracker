@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.vercel/
+*.log
+definity-tracker.db
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
