@@ -108,10 +108,10 @@ export default function Dashboard() {
               <h1 className="text-3xl font-bold text-gray-900">Definity Waste Tracker</h1>
               <p className="text-gray-600 mt-1">Track contrast waste and costs</p>
             </div>
-            <div className="text-sm text-gray-500">
-              <p>Cost: $10 per mL of diluted Definity</p>
-              <p>1 vial (1.5mL) = $200 → 4 syringes (5mL each)</p>
-            </div>
+                                    <div className="text-sm text-gray-500">
+                          <p>Cost: $10 per mL of diluted Definity</p>
+                          <p>1 vial (1.5mL pure) = $200 → 4 syringes (5mL diluted each = 20mL total)</p>
+                        </div>
           </div>
         </div>
       </div>

@@ -97,7 +97,7 @@ export default function WasteSummary({ data, selectedPeriod, onPeriodChange, isL
           <div className="text-3xl font-bold text-blue-600">{totals.total_ml.toFixed(1)}</div>
           <div className="text-sm text-gray-600">mL Wasted</div>
           <div className="text-xs text-gray-500 mt-1">
-            {totals.total_ml > 0 && `${(totals.total_ml / 1.5).toFixed(1)} vials equivalent`}
+            {totals.total_ml > 0 && `${(totals.total_ml / 20).toFixed(1)} vials equivalent`}
           </div>
         </div>
 
