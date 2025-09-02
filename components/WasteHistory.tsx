@@ -34,7 +34,7 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Entries</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">All Entries</h2>
       
       {entries.length === 0 ? (
         <div className="text-center py-8">
@@ -43,7 +43,7 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
         </div>
       ) : (
         <div className="space-y-3">
-          {entries.slice(0, 10).map((entry) => (
+          {entries.map((entry) => (
             <div
               key={entry.id}
               className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
@@ -88,14 +88,6 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
               </div>
             </div>
           ))}
-          
-          {entries.length > 10 && (
-            <div className="text-center pt-3">
-              <p className="text-sm text-gray-500">
-                Showing 10 most recent entries
-              </p>
-            </div>
-          )}
         </div>
       )}
     </div>
