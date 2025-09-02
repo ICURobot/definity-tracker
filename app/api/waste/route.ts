@@ -131,3 +131,46 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// DELETE - Remove waste entry
+export async function DELETE(request: NextRequest) {
+  try {
+    // Initialize database on first run
+    await initDatabase();
+    
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Entry ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const result = await sql`
+      DELETE FROM waste_entries 
+      WHERE id = ${id}
+      RETURNING id
+    `;
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Entry not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: 'Waste entry deleted successfully',
+      deletedId: result.rows[0].id
+    });
+
+  } catch (error) {
+    console.error('Error deleting waste entry:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete waste entry' },
+      { status: 500 }
+    );
+  }
+}

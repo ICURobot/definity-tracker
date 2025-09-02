@@ -71,6 +71,28 @@ export default function Dashboard() {
     fetchWasteData(period);
   };
 
+  const handleDeleteEntry = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/waste?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Refresh the data
+        fetchWasteData();
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.error}`);
+      }
+    } catch (error) {
+      alert('Network error. Please try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -107,6 +129,7 @@ export default function Dashboard() {
             <WasteHistory 
               entries={wasteData?.entries || []} 
               isLoading={isLoading}
+              onDeleteEntry={handleDeleteEntry}
             />
           </div>
         </div>
