@@ -101,26 +101,26 @@ export default function WasteSummary({ data, selectedPeriod, onPeriodChange, isL
           </div>
         </div>
 
-        {/* Total Cost */}
+        {/* Waste Value */}
         <div className="text-center">
-          <div className="text-3xl font-bold text-red-600">${vials.cost.toFixed(2)}</div>
-          <div className="text-sm text-gray-600">Total Cost</div>
+          <div className="text-3xl font-bold text-red-600">${totals.total_cost.toFixed(2)}</div>
+          <div className="text-sm text-gray-600">Waste Value</div>
           <div className="text-xs text-gray-500 mt-1">
-            {vials.used > 0 && `${vials.used} vial${vials.used > 1 ? 's' : ''} × $200`}
+            {totals.total_ml > 0 && `${totals.total_ml.toFixed(1)} mL × $10/mL`}
           </div>
         </div>
       </div>
 
-      {/* Waste Details */}
+      {/* Total Cost */}
       {entryCount > 0 && (
         <div className="mt-6 pt-6 border-t border-gray-200">
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-700">
-              ${totals.total_cost.toFixed(2)}
+            <div className="text-2xl font-bold text-gray-900">
+              ${vials.cost.toFixed(2)}
             </div>
-            <div className="text-sm text-gray-600">Waste Value</div>
+            <div className="text-sm text-gray-600">Total Cost</div>
             <div className="text-xs text-gray-500 mt-1">
-              {totals.total_ml.toFixed(1)} mL × $10/mL
+              {vials.used > 0 && `${vials.used} vial${vials.used > 1 ? 's' : ''} × $200`}
             </div>
           </div>
         </div>
