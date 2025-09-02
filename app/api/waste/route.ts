@@ -70,8 +70,15 @@ export async function GET(request: NextRequest) {
       return acc;
     }, { total_ml: 0, total_cost: 0 });
 
+    // Convert string values to numbers for client-side compatibility
+    const formattedEntries = entries.rows.map((entry: any) => ({
+      ...entry,
+      amount_ml: parseFloat(entry.amount_ml),
+      cost_dollars: parseFloat(entry.cost_dollars)
+    }));
+
     return NextResponse.json({
-      entries: entries.rows,
+      entries: formattedEntries,
       totals,
       period: period || 'all'
     });
