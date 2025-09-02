@@ -50,8 +50,12 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
             >
               <div className="flex-1">
                 <div className="flex items-center space-x-4">
-                  <div className="text-sm font-medium text-gray-900">
-                    {entry.amount_ml} mL
+                  <div className={`text-sm font-medium ${
+                    entry.amount_ml === 0 
+                      ? 'text-green-600' 
+                      : 'text-gray-900'
+                  }`}>
+                    {entry.amount_ml === 0 ? '0 mL (No Waste)' : `${entry.amount_ml} mL`}
                   </div>
                   <div className="text-sm text-gray-600">
                     {format(new Date(entry.created_at), 'MMM dd, yyyy')}
@@ -63,8 +67,13 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry }: Wast
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-red-600">
+                  <div className={`text-sm font-semibold ${
+                    entry.amount_ml === 0 
+                      ? 'text-green-600' 
+                      : 'text-red-600'
+                  }`}>
                     ${entry.cost_dollars.toFixed(2)}
+                    {entry.amount_ml === 0 && ' (No waste!)'}
                   </div>
                 </div>
                 <button

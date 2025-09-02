@@ -14,8 +14,8 @@ export default function WasteEntryForm({ onSubmit }: WasteEntryFormProps) {
     e.preventDefault();
     
     const amount_ml = parseFloat(amount);
-    if (!amount_ml || amount_ml <= 0) {
-      alert('Please enter a valid amount greater than 0');
+    if (isNaN(amount_ml) || amount_ml < 0) {
+      alert('Please enter a valid amount (0 or greater)');
       return;
     }
 
@@ -25,6 +25,18 @@ export default function WasteEntryForm({ onSubmit }: WasteEntryFormProps) {
       setAmount(''); // Clear form on success
     } catch (error) {
       console.error('Error submitting waste entry:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleZeroWaste = async () => {
+    setIsSubmitting(true);
+    try {
+      await onSubmit(0);
+      setAmount(''); // Clear form on success
+    } catch (error) {
+      console.error('Error submitting zero waste entry:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -49,29 +61,52 @@ export default function WasteEntryForm({ onSubmit }: WasteEntryFormProps) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter amount in mL"
-            required
+            placeholder="Enter amount in mL (0 for no waste)"
           />
         </div>
 
-        {amount && (
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-            <p className="text-sm text-blue-800">
+        {amount !== '' && (
+          <div className={`border rounded-md p-3 ${
+            parseFloat(amount) === 0 
+              ? 'bg-green-50 border-green-200' 
+              : 'bg-blue-50 border-blue-200'
+          }`}>
+            <p className={`text-sm ${
+              parseFloat(amount) === 0 
+                ? 'text-green-800' 
+                : 'text-blue-800'
+            }`}>
               <strong>Cost:</strong> ${cost.toFixed(2)}
+              {parseFloat(amount) === 0 && ' (No waste!)'}
             </p>
-            <p className="text-xs text-blue-600 mt-1">
+            <p className={`text-xs mt-1 ${
+              parseFloat(amount) === 0 
+                ? 'text-green-600' 
+                : 'text-blue-600'
+            }`}>
               $10 per mL of diluted Definity
             </p>
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={isSubmitting || !amount}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Recording...' : 'Record Waste'}
-        </button>
+        <div className="space-y-3">
+          <button
+            type="submit"
+            disabled={isSubmitting || !amount}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Recording...' : 'Record Waste'}
+          </button>
+          
+          <button
+            type="button"
+            onClick={handleZeroWaste}
+            disabled={isSubmitting}
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Recording...' : 'Zero Waste (Used Syringe)'}
+          </button>
+        </div>
       </form>
 
       <div className="mt-6 text-xs text-gray-500">
@@ -80,6 +115,7 @@ export default function WasteEntryForm({ onSubmit }: WasteEntryFormProps) {
           <li>• 1 vial = 1.5mL = $200</li>
           <li>• 4 syringes × 5mL = 20mL total</li>
           <li>• Cost per mL = $10</li>
+          <li>• Use "Zero Waste" when syringe is used but no waste</li>
         </ul>
       </div>
     </div>
