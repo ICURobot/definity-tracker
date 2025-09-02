@@ -110,9 +110,9 @@ export async function POST(request: NextRequest) {
     
     const { amount_ml } = await request.json();
 
-    if (!amount_ml || amount_ml <= 0) {
+    if (amount_ml === undefined || amount_ml === null || amount_ml < 0) {
       return NextResponse.json(
-        { error: 'Valid amount in mL is required' },
+        { error: 'Valid amount in mL is required (0 or greater)' },
         { status: 400 }
       );
     }
