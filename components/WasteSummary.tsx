@@ -8,6 +8,11 @@ interface WasteData {
     total_ml: number;
     total_cost: number;
   };
+  vials: {
+    used: number;
+    cost: number;
+    totalEntries: number;
+  };
   period: string;
 }
 
@@ -47,6 +52,7 @@ export default function WasteSummary({ data, selectedPeriod, onPeriodChange, isL
 
   const totals = data?.totals || { total_ml: 0, total_cost: 0 };
   const entryCount = data?.entries?.length || 0;
+  const vials = data?.vials || { used: 0, cost: 0, totalEntries: 0 };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -69,12 +75,21 @@ export default function WasteSummary({ data, selectedPeriod, onPeriodChange, isL
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total Entries */}
         <div className="text-center">
           <div className="text-3xl font-bold text-gray-900">{entryCount}</div>
           <div className="text-sm text-gray-600">Entries</div>
           <div className="text-xs text-gray-500 mt-1">{getPeriodLabel(selectedPeriod)}</div>
+        </div>
+
+        {/* Vials Used */}
+        <div className="text-center">
+          <div className="text-3xl font-bold text-purple-600">{vials.used}</div>
+          <div className="text-sm text-gray-600">Vials Used</div>
+          <div className="text-xs text-gray-500 mt-1">
+            {vials.totalEntries > 0 && `${vials.totalEntries % 4}/4 to next vial`}
+          </div>
         </div>
 
         {/* Total Volume */}
@@ -89,12 +104,27 @@ export default function WasteSummary({ data, selectedPeriod, onPeriodChange, isL
         {/* Total Cost */}
         <div className="text-center">
           <div className="text-3xl font-bold text-red-600">${totals.total_cost.toFixed(2)}</div>
-          <div className="text-sm text-gray-600">Cost</div>
+          <div className="text-sm text-gray-600">Waste Cost</div>
           <div className="text-xs text-gray-500 mt-1">
-            {totals.total_cost > 0 && `${(totals.total_cost / 200).toFixed(1)} vials worth`}
+            {vials.cost > 0 && `+ $${vials.cost.toFixed(2)} vial cost`}
           </div>
         </div>
       </div>
+
+      {/* Total Cost Summary */}
+      {entryCount > 0 && (
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600">
+              ${(totals.total_cost + vials.cost).toFixed(2)}
+            </div>
+            <div className="text-sm text-gray-600">Total Cost (Waste + Vials)</div>
+            <div className="text-xs text-gray-500 mt-1">
+              ${totals.total_cost.toFixed(2)} waste + ${vials.cost.toFixed(2)} vials
+            </div>
+          </div>
+        </div>
+      )}
 
       {entryCount === 0 && (
         <div className="text-center py-8">

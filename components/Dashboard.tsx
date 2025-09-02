@@ -19,6 +19,11 @@ interface WasteData {
     total_ml: number;
     total_cost: number;
   };
+  vials: {
+    used: number;
+    cost: number;
+    totalEntries: number;
+  };
   period: string;
 }
 

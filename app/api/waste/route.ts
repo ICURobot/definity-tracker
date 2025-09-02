@@ -70,6 +70,11 @@ export async function GET(request: NextRequest) {
       return acc;
     }, { total_ml: 0, total_cost: 0 });
 
+    // Calculate vial usage (every 4 entries = 1 vial used)
+    const totalEntries = entries.rows.length;
+    const vialsUsed = Math.floor(totalEntries / 4);
+    const vialCost = vialsUsed * 200; // $200 per vial
+
     // Convert string values to numbers for client-side compatibility
     const formattedEntries = entries.rows.map((entry: any) => ({
       ...entry,
@@ -80,6 +85,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       entries: formattedEntries,
       totals,
+      vials: {
+        used: vialsUsed,
+        cost: vialCost,
+        totalEntries: totalEntries
+      },
       period: period || 'all'
     });
 
