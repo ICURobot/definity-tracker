@@ -18,6 +18,7 @@ function parseLocalTime(timestamp: string): Date {
     // We need to adjust for the timezone offset to get back to local time
     // Toronto is UTC-4 in summer (EDT), so we need to subtract 4 hours
     const localDate = new Date(utcDate.getTime() - (4 * 60 * 60 * 1000));
+    console.log('parseLocalTime:', { timestamp, utcDate, localDate, localTimeString: localDate.toLocaleString() });
     return localDate;
   }
   
