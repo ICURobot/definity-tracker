@@ -33,12 +33,12 @@ function formatLocalTime(timestamp: string): string {
   
   if (timestamp.endsWith('Z')) {
     const utcDate = new Date(timestamp);
-    // Toronto is UTC-4 in summer (EDT), so we need to subtract 4 hours
-    const localTime = new Date(utcDate.getTime() - (4 * 60 * 60 * 1000));
+    // The timestamp from API is in UTC, but represents Toronto local time
+    // So we need to add 4 hours to convert UTC back to Toronto time
+    const torontoTime = new Date(utcDate.getTime() + (4 * 60 * 60 * 1000));
     
-    // Format manually to avoid timezone conversion issues
-    const hours = localTime.getUTCHours();
-    const minutes = localTime.getUTCMinutes();
+    const hours = torontoTime.getUTCHours();
+    const minutes = torontoTime.getUTCMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours % 12 || 12;
     const displayMinutes = minutes.toString().padStart(2, '0');
