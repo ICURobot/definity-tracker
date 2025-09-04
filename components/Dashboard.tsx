@@ -37,9 +37,17 @@ export default function Dashboard() {
       setIsLoading(true);
       const response = await fetch(`/api/waste?period=${period}`);
       const data = await response.json();
-      setWasteData(data);
+      
+      // Check if the API returned an error
+      if (data.error) {
+        console.error('API Error:', data.error);
+        setWasteData(null); // Set to null to show empty state
+      } else {
+        setWasteData(data);
+      }
     } catch (error) {
       console.error('Error fetching waste data:', error);
+      setWasteData(null); // Set to null to show empty state
     } finally {
       setIsLoading(false);
     }

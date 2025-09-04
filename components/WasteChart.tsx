@@ -43,6 +43,16 @@ interface WasteChartProps {
 }
 
 export default function WasteChart({ entries, period }: WasteChartProps) {
+  // Handle empty entries
+  if (!entries || entries.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-gray-400 text-lg mb-2">📊</div>
+        <p className="text-gray-500">No waste entries recorded yet</p>
+      </div>
+    );
+  }
+
   // Group entries by date
   const dailyData: DailyData[] = entries.reduce((acc: DailyData[], entry) => {
     const date = format(parseLocalTime(entry.created_at), 'yyyy-MM-dd');

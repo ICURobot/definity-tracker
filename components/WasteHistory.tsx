@@ -56,7 +56,7 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry, select
   }
 
   const renderContent = () => {
-    if (entries.length === 0) {
+    if (!entries || entries.length === 0) {
       return (
         <div className="text-center py-8">
           <div className="text-gray-400 text-lg mb-2">📝</div>
