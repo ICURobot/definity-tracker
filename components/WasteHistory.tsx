@@ -138,7 +138,7 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry, select
       );
     }
 
-    // For weekly/monthly views, show chart and daily breakdown
+    // For weekly/monthly/all views, show chart and daily breakdown
     return (
       <div className="space-y-6">
         <WasteChart entries={entries} period={selectedPeriod} />
