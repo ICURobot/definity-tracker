@@ -32,12 +32,10 @@ function formatLocalTime(timestamp: string): string {
   
   if (timestamp.endsWith('Z')) {
     const utcDate = new Date(timestamp);
-    // The timestamp from API is in UTC, but represents Toronto local time
-    // So we need to add 4 hours to convert UTC back to Toronto time
-    const torontoTime = new Date(utcDate.getTime() + (4 * 60 * 60 * 1000));
-    
-    const hours = torontoTime.getUTCHours();
-    const minutes = torontoTime.getUTCMinutes();
+    // Database stores Toronto time but PostgreSQL returns it as UTC
+    // We need to extract the time components directly from the UTC timestamp
+    const hours = utcDate.getUTCHours();
+    const minutes = utcDate.getUTCMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours % 12 || 12;
     const displayMinutes = minutes.toString().padStart(2, '0');
