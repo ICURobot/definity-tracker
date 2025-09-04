@@ -124,8 +124,8 @@ export async function POST(request: NextRequest) {
     const cost_dollars = amount_ml * 10;
 
     const result = await sql`
-      INSERT INTO waste_entries (amount_ml, cost_dollars)
-      VALUES (${amount_ml}, ${cost_dollars})
+      INSERT INTO waste_entries (amount_ml, cost_dollars, created_at)
+      VALUES (${amount_ml}, ${cost_dollars}, NOW() AT TIME ZONE 'America/Toronto')
       RETURNING id
     `;
 
