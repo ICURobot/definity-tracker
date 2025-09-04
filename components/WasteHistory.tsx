@@ -4,6 +4,13 @@ import { format } from 'date-fns';
 import DailyBreakdown from './DailyBreakdown';
 import WasteChart from './WasteChart';
 
+// Helper function to parse timestamp as local time (no timezone conversion)
+function parseLocalTime(timestamp: string): Date {
+  // Replace space with T to make it ISO format, then parse as local time
+  const isoString = timestamp.replace(' ', 'T');
+  return new Date(isoString);
+}
+
 interface WasteEntry {
   id: number;
   amount_ml: number;
@@ -64,7 +71,7 @@ export default function WasteHistory({ entries, isLoading, onDeleteEntry, select
                     {entry.amount_ml === 0 ? '0 mL (No Waste)' : `${entry.amount_ml} mL`}
                   </div>
                   <div className="text-xs text-gray-500">
-                    {format(new Date(entry.created_at), 'h:mm a')}
+                    {format(parseLocalTime(entry.created_at), 'h:mm a')}
                   </div>
                 </div>
               </div>

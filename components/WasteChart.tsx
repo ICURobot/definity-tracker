@@ -2,6 +2,13 @@
 
 import { format, parseISO } from 'date-fns';
 
+// Helper function to parse timestamp as local time (no timezone conversion)
+function parseLocalTime(timestamp: string): Date {
+  // Replace space with T to make it ISO format, then parse as local time
+  const isoString = timestamp.replace(' ', 'T');
+  return new Date(isoString);
+}
+
 interface WasteEntry {
   id: number;
   amount_ml: number;
@@ -80,7 +87,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
               return (
                 <div key={day.date} className="flex items-center space-x-3">
                   <div className="w-20 text-xs text-gray-600">
-                    {format(parseISO(day.date), 'MMM dd')}
+                    {format(new Date(day.date), 'MMM dd')}
                   </div>
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                     <div 
@@ -113,7 +120,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
               return (
                 <div key={day.date} className="flex items-center space-x-3">
                   <div className="w-20 text-xs text-gray-600">
-                    {format(parseISO(day.date), 'MMM dd')}
+                    {format(new Date(day.date), 'MMM dd')}
                   </div>
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                     <div 

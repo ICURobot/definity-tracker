@@ -3,6 +3,13 @@
 import { format, parseISO } from 'date-fns';
 import { useState } from 'react';
 
+// Helper function to parse timestamp as local time (no timezone conversion)
+function parseLocalTime(timestamp: string): Date {
+  // Replace space with T to make it ISO format, then parse as local time
+  const isoString = timestamp.replace(' ', 'T');
+  return new Date(isoString);
+}
+
 interface WasteEntry {
   id: number;
   amount_ml: number;
@@ -87,7 +94,7 @@ export default function DailyBreakdown({ entries, onDeleteEntry }: DailyBreakdow
             <div className="flex-1">
               <div className="flex items-center space-x-4">
                 <h3 className={`text-lg font-semibold ${getDayTextColor(day.total_ml)}`}>
-                  {format(parseISO(day.date), 'EEEE, MMM dd, yyyy')}
+                  {format(new Date(day.date), 'EEEE, MMM dd, yyyy')}
                 </h3>
                 <div className="flex items-center space-x-6 text-sm">
                   <span className={`font-medium ${getDayTextColor(day.total_ml)}`}>
@@ -135,7 +142,7 @@ export default function DailyBreakdown({ entries, onDeleteEntry }: DailyBreakdow
                         {entry.amount_ml === 0 ? '0 mL (No Waste)' : `${entry.amount_ml} mL`}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {format(parseISO(entry.created_at), 'h:mm a')}
+                        {format(parseLocalTime(entry.created_at), 'h:mm a')}
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
