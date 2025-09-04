@@ -5,9 +5,14 @@ import { useState } from 'react';
 
 // Helper function to parse timestamp as local time (no timezone conversion)
 function parseLocalTime(timestamp: string): Date {
-  // Replace space with T to make it ISO format, then parse as local time
-  const isoString = timestamp.replace(' ', 'T');
-  return new Date(isoString);
+  // Parse the timestamp components manually to avoid timezone conversion
+  const [datePart, timePart] = timestamp.split(' ');
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [time, ms] = timePart.split('.');
+  const [hours, minutes, seconds] = time.split(':').map(Number);
+  
+  // Create date object in local timezone
+  return new Date(year, month - 1, day, hours, minutes, seconds);
 }
 
 interface WasteEntry {
