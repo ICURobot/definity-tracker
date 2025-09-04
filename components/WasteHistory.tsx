@@ -6,8 +6,11 @@ import WasteChart from './WasteChart';
 
 // Helper function to parse timestamp correctly
 function parseLocalTime(timestamp: string): Date {
+  console.log('🔥 parseLocalTime called with:', timestamp);
+  
   // Handle undefined or invalid timestamps
   if (!timestamp || typeof timestamp !== 'string') {
+    console.log('❌ Invalid timestamp, returning current date');
     return new Date(); // Return current date as fallback
   }
   
@@ -18,11 +21,19 @@ function parseLocalTime(timestamp: string): Date {
     // We need to adjust for the timezone offset to get back to local time
     // Toronto is UTC-4 in summer (EDT), so we need to subtract 4 hours
     const localDate = new Date(utcDate.getTime() - (4 * 60 * 60 * 1000));
-    console.log('parseLocalTime:', { timestamp, utcDate, localDate, localTimeString: localDate.toLocaleString() });
+    console.log('✅ UTC timestamp parsed:', { 
+      original: timestamp, 
+      utcDate: utcDate.toISOString(), 
+      localDate: localDate.toISOString(),
+      localTimeString: localDate.toLocaleString(),
+      localDateString: localDate.toLocaleDateString(),
+      localTimeOnly: localDate.toLocaleTimeString()
+    });
     return localDate;
   }
   
   // For other formats, try to parse as-is
+  console.log('⚠️ Non-UTC timestamp, parsing as-is');
   return new Date(timestamp);
 }
 
