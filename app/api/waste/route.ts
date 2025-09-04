@@ -24,44 +24,43 @@ export async function GET(request: NextRequest) {
         ORDER BY created_at DESC
       `;
     } else if (period === 'daily') {
-      // Get today's date range in UTC to avoid timezone issues
+      // Get today's date in the user's local timezone
       const now = new Date();
-      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const today = now.toLocaleDateString('en-CA'); // YYYY-MM-DD format in local timezone
       
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at) as date
+          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
         FROM waste_entries
-        WHERE created_at >= ${startOfDay.toISOString()} AND created_at < ${endOfDay.toISOString()}
+        WHERE DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') = ${today}
         ORDER BY created_at DESC
       `;
     } else if (period === 'weekly') {
-      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-CA');
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at) as date
+          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
         FROM waste_entries
-        WHERE created_at >= ${weekAgo.toISOString()}
+        WHERE DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') >= ${weekAgo}
         ORDER BY created_at DESC
       `;
     } else if (period === 'monthly') {
-      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('en-CA');
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at) as date
+          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
         FROM waste_entries
-        WHERE created_at >= ${monthStart.toISOString()}
+        WHERE DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') >= ${monthStart}
         ORDER BY created_at DESC
       `;
     } else {
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at) as date
+          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
         FROM waste_entries
         ORDER BY created_at DESC
       `;
