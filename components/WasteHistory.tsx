@@ -13,7 +13,12 @@ function parseLocalTime(timestamp: string): Date {
   
   // If it's a UTC timestamp (ends with Z), parse it and convert to local time
   if (timestamp.endsWith('Z')) {
-    return new Date(timestamp);
+    const utcDate = new Date(timestamp);
+    // The database stores local time but PostgreSQL returns it as UTC
+    // We need to adjust for the timezone offset to get back to local time
+    // Toronto is UTC-4 in summer (EDT), so we need to subtract 4 hours
+    const localDate = new Date(utcDate.getTime() - (4 * 60 * 60 * 1000));
+    return localDate;
   }
   
   // For other formats, try to parse as-is

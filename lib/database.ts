@@ -9,7 +9,7 @@ export async function initDatabase() {
         id SERIAL PRIMARY KEY,
         amount_ml DECIMAL(10,2) NOT NULL,
         cost_dollars DECIMAL(10,2) NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'America/Toronto')
+        created_at TIMESTAMP DEFAULT (NOW() AT TIME ZONE 'America/Toronto')
       )
     `;
   } catch (error) {
