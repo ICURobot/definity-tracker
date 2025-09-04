@@ -150,7 +150,7 @@ export default function DailyBreakdown({ entries, onDeleteEntry }: DailyBreakdow
             <div className="flex-1">
               <div className="flex items-center space-x-4">
                 <h3 className={`text-lg font-semibold ${getDayTextColor(day.total_ml)}`}>
-                  {format(new Date(day.date), 'EEEE, MMM dd, yyyy')}
+                  {format(new Date(day.date + 'T00:00:00'), 'EEEE, MMM dd, yyyy')}
                 </h3>
                 <div className="flex items-center space-x-6 text-sm">
                   <span className={`font-medium ${getDayTextColor(day.total_ml)}`}>
