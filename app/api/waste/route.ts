@@ -31,9 +31,9 @@ export async function GET(request: NextRequest) {
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
+          DATE(created_at) as date
         FROM waste_entries
-        WHERE DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') = ${today}
+        WHERE DATE(created_at) = ${today}
         ORDER BY created_at DESC
       `;
     } else if (period === 'weekly') {
@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
+          DATE(created_at) as date
         FROM waste_entries
-        WHERE DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') >= ${weekAgo}
+        WHERE DATE(created_at) >= ${weekAgo}
         ORDER BY created_at DESC
       `;
     } else if (period === 'monthly') {
@@ -51,16 +51,16 @@ export async function GET(request: NextRequest) {
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
+          DATE(created_at) as date
         FROM waste_entries
-        WHERE DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') >= ${monthStart}
+        WHERE DATE(created_at) >= ${monthStart}
         ORDER BY created_at DESC
       `;
     } else {
       entries = await sql`
         SELECT 
           *,
-          DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Toronto') as date
+          DATE(created_at) as date
         FROM waste_entries
         ORDER BY created_at DESC
       `;
