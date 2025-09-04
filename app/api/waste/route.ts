@@ -30,8 +30,7 @@ export async function GET(request: NextRequest) {
       
       entries = await sql`
         SELECT 
-          *,
-          DATE(created_at) as date
+          *
         FROM waste_entries
         WHERE DATE(created_at) = ${today}
         ORDER BY created_at DESC
@@ -40,8 +39,7 @@ export async function GET(request: NextRequest) {
       const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-CA');
       entries = await sql`
         SELECT 
-          *,
-          DATE(created_at) as date
+          *
         FROM waste_entries
         WHERE DATE(created_at) >= ${weekAgo}
         ORDER BY created_at DESC
@@ -50,8 +48,7 @@ export async function GET(request: NextRequest) {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('en-CA');
       entries = await sql`
         SELECT 
-          *,
-          DATE(created_at) as date
+          *
         FROM waste_entries
         WHERE DATE(created_at) >= ${monthStart}
         ORDER BY created_at DESC
@@ -59,8 +56,7 @@ export async function GET(request: NextRequest) {
     } else {
       entries = await sql`
         SELECT 
-          *,
-          DATE(created_at) as date
+          *
         FROM waste_entries
         ORDER BY created_at DESC
       `;

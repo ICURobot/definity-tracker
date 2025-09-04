@@ -19,7 +19,6 @@ interface WasteEntry {
   amount_ml: number;
   cost_dollars: number;
   created_at: string;
-  date: string;
 }
 
 interface DailyData {
@@ -37,7 +36,7 @@ interface WasteChartProps {
 export default function WasteChart({ entries, period }: WasteChartProps) {
   // Group entries by date
   const dailyData: DailyData[] = entries.reduce((acc: DailyData[], entry) => {
-    const date = entry.date;
+    const date = format(parseLocalTime(entry.created_at), 'yyyy-MM-dd');
     let dayData = acc.find(d => d.date === date);
     
     if (!dayData) {

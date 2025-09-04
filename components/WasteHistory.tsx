@@ -21,7 +21,6 @@ interface WasteEntry {
   amount_ml: number;
   cost_dollars: number;
   created_at: string;
-  date: string;
 }
 
 interface WasteHistoryProps {
