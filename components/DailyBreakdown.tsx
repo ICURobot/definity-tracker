@@ -57,6 +57,7 @@ interface DailyBreakdownProps {
 }
 
 export default function DailyBreakdown({ entries, onDeleteEntry }: DailyBreakdownProps) {
+  console.log('🚨 DailyBreakdown component loaded with entries:', entries?.length);
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
 
   // Handle empty entries
