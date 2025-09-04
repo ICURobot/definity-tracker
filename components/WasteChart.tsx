@@ -74,6 +74,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
     return acc;
   }, []).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
+  console.log('WasteChart final dailyData:', dailyData);
 
   if (dailyData.length === 0) {
     return (
