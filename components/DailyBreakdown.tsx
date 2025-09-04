@@ -85,7 +85,14 @@ export default function DailyBreakdown({ entries, onDeleteEntry }: DailyBreakdow
 
   // Group entries by date
   const dailyData: DailyData[] = entries.reduce((acc: DailyData[], entry) => {
-    const date = format(parseLocalTime(entry.created_at), 'yyyy-MM-dd');
+    const parsedDate = parseLocalTime(entry.created_at);
+    const date = format(parsedDate, 'yyyy-MM-dd');
+    console.log('🗓️ Date grouping:', { 
+      original: entry.created_at, 
+      parsedDate: parsedDate.toISOString(), 
+      formattedDate: date,
+      localDateString: parsedDate.toLocaleDateString()
+    });
     let dayData = acc.find(d => d.date === date);
     
     if (!dayData) {
