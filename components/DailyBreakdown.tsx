@@ -21,15 +21,15 @@ function parseLocalTime(timestamp: string): Date {
     // Toronto is UTC-4 in summer (EDT), so we need to subtract 4 hours
     const localTime = new Date(utcDate.getTime() - (4 * 60 * 60 * 1000));
     
-    // Create a new Date object in local timezone using the components
+    // Create a new Date object in local timezone using the local components
     const localDate = new Date(
-      localTime.getUTCFullYear(),
-      localTime.getUTCMonth(),
-      localTime.getUTCDate(),
-      localTime.getUTCHours(),
-      localTime.getUTCMinutes(),
-      localTime.getUTCSeconds(),
-      localTime.getUTCMilliseconds()
+      localTime.getFullYear(),
+      localTime.getMonth(),
+      localTime.getDate(),
+      localTime.getHours(),
+      localTime.getMinutes(),
+      localTime.getSeconds(),
+      localTime.getMilliseconds()
     );
     
     console.log('✅ DailyBreakdown UTC timestamp parsed:', { 
