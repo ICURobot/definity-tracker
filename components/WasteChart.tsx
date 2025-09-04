@@ -103,6 +103,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
           <h4 className="text-sm font-medium text-gray-700 mb-2">Volume (mL)</h4>
           <div className="space-y-2">
             {dailyData.map((day) => {
+              console.log('Rendering chart bar for:', day.date, 'with data:', day);
               const percentage = maxMl > 0 ? (day.total_ml / maxMl) * 100 : 0;
               const barColor = day.total_ml === 0 ? 'bg-green-500' : 
                               day.total_ml <= 5 ? 'bg-yellow-500' : 
@@ -111,7 +112,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
               return (
                 <div key={day.date} className="flex items-center space-x-3">
                   <div className="w-20 text-xs text-gray-600">
-                    {format(new Date(day.date), 'MMM dd')}
+                    {format(parseISO(day.date), 'MMM dd')}
                   </div>
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                     <div 
@@ -144,7 +145,7 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
               return (
                 <div key={day.date} className="flex items-center space-x-3">
                   <div className="w-20 text-xs text-gray-600">
-                    {format(new Date(day.date), 'MMM dd')}
+                    {format(parseISO(day.date), 'MMM dd')}
                   </div>
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                     <div 
