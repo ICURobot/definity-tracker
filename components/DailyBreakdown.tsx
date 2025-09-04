@@ -3,25 +3,20 @@
 import { format, parseISO } from 'date-fns';
 import { useState } from 'react';
 
-// Helper function to parse timestamp as local time (no timezone conversion)
+// Helper function to parse timestamp correctly
 function parseLocalTime(timestamp: string): Date {
   // Handle undefined or invalid timestamps
   if (!timestamp || typeof timestamp !== 'string') {
     return new Date(); // Return current date as fallback
   }
   
-  // Parse the timestamp components manually to avoid timezone conversion
-  const [datePart, timePart] = timestamp.split(' ');
-  if (!datePart || !timePart) {
-    return new Date(); // Return current date as fallback
+  // If it's a UTC timestamp (ends with Z), parse it and convert to local time
+  if (timestamp.endsWith('Z')) {
+    return new Date(timestamp);
   }
   
-  const [year, month, day] = datePart.split('-').map(Number);
-  const [time, ms] = timePart.split('.');
-  const [hours, minutes, seconds] = time.split(':').map(Number);
-  
-  // Create date object in local timezone
-  return new Date(year, month - 1, day, hours, minutes, seconds);
+  // For other formats, try to parse as-is
+  return new Date(timestamp);
 }
 
 interface WasteEntry {
