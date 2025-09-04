@@ -24,33 +24,37 @@ export async function GET(request: NextRequest) {
         ORDER BY created_at DESC
       `;
     } else if (period === 'daily') {
-      const today = new Date().toISOString().split('T')[0];
+      // Get today's date range in UTC to avoid timezone issues
+      const now = new Date();
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      
       entries = await sql`
         SELECT 
           *,
           DATE(created_at) as date
         FROM waste_entries
-        WHERE DATE(created_at) = ${today}
+        WHERE created_at >= ${startOfDay.toISOString()} AND created_at < ${endOfDay.toISOString()}
         ORDER BY created_at DESC
       `;
     } else if (period === 'weekly') {
-      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
       entries = await sql`
         SELECT 
           *,
           DATE(created_at) as date
         FROM waste_entries
-        WHERE DATE(created_at) >= ${weekAgo}
+        WHERE created_at >= ${weekAgo.toISOString()}
         ORDER BY created_at DESC
       `;
     } else if (period === 'monthly') {
-      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       entries = await sql`
         SELECT 
           *,
           DATE(created_at) as date
         FROM waste_entries
-        WHERE DATE(created_at) >= ${monthStart}
+        WHERE created_at >= ${monthStart.toISOString()}
         ORDER BY created_at DESC
       `;
     } else {
