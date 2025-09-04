@@ -41,8 +41,10 @@ export default function Dashboard() {
       // Check if the API returned an error
       if (data.error) {
         console.error('API Error:', data.error);
+        console.error('Full API Response:', data);
         setWasteData(null); // Set to null to show empty state
       } else {
+        console.log('API Success - Data received:', data);
         setWasteData(data);
       }
     } catch (error) {
