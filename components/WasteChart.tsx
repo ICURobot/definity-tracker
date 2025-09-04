@@ -55,11 +55,6 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
   const dailyData: DailyData[] = entries.reduce((acc: DailyData[], entry) => {
     const parsedDate = parseLocalTime(entry.created_at);
     const date = format(parsedDate, 'yyyy-MM-dd');
-    console.log('WasteChart date parsing:', { 
-      original: entry.created_at, 
-      parsed: parsedDate.toISOString(), 
-      formatted: date 
-    });
     let dayData = acc.find(d => d.date === date);
     
     if (!dayData) {
@@ -79,7 +74,6 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
     return acc;
   }, []).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  console.log('WasteChart dailyData after grouping:', dailyData);
 
   if (dailyData.length === 0) {
     return (
@@ -121,10 +115,10 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                     <div 
                       className={`h-6 rounded-full ${barColor} transition-all duration-300`}
-                      style={{ width: `${Math.max(percentage, 2)}%` }}
+                      style={{ width: `${Math.max(percentage, 8)}%` }}
                     ></div>
                     <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
-                      {day.total_ml > 0 && `${day.total_ml.toFixed(1)}mL`}
+                      {day.total_ml > 0 ? `${day.total_ml.toFixed(1)}mL` : '0mL'}
                     </div>
                   </div>
                   <div className="w-16 text-xs text-gray-600 text-right">
@@ -154,10 +148,10 @@ export default function WasteChart({ entries, period }: WasteChartProps) {
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
                     <div 
                       className={`h-6 rounded-full ${barColor} transition-all duration-300`}
-                      style={{ width: `${Math.max(percentage, 2)}%` }}
+                      style={{ width: `${Math.max(percentage, 8)}%` }}
                     ></div>
                     <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
-                      {day.total_cost > 0 && `$${day.total_cost.toFixed(0)}`}
+                      {day.total_cost > 0 ? `$${day.total_cost.toFixed(0)}` : '$0'}
                     </div>
                   </div>
                   <div className="w-16 text-xs text-gray-600 text-right">
