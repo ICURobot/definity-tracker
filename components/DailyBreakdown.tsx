@@ -37,6 +37,31 @@ function parseLocalTime(timestamp: string): Date {
   return new Date(timestamp);
 }
 
+// Helper function to format time correctly
+function formatLocalTime(timestamp: string): string {
+  if (!timestamp || typeof timestamp !== 'string') {
+    return 'Invalid time';
+  }
+  
+  if (timestamp.endsWith('Z')) {
+    const utcDate = new Date(timestamp);
+    // Toronto is UTC-4 in summer (EDT), so we need to subtract 4 hours
+    const localTime = new Date(utcDate.getTime() - (4 * 60 * 60 * 1000));
+    
+    // Format manually to avoid timezone conversion issues
+    const hours = localTime.getUTCHours();
+    const minutes = localTime.getUTCMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    
+    return `${displayHours}:${displayMinutes} ${ampm}`;
+  }
+  
+  // For other formats, use date-fns
+  return format(new Date(timestamp), 'h:mm a');
+}
+
 interface WasteEntry {
   id: number;
   amount_ml: number;
@@ -186,7 +211,7 @@ export default function DailyBreakdown({ entries, onDeleteEntry }: DailyBreakdow
                         {entry.amount_ml === 0 ? '0 mL (No Waste)' : `${entry.amount_ml} mL`}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {format(parseLocalTime(entry.created_at), 'h:mm a')}
+                        {formatLocalTime(entry.created_at)}
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
