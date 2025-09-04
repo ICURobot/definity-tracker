@@ -5,8 +5,17 @@ import { useState } from 'react';
 
 // Helper function to parse timestamp as local time (no timezone conversion)
 function parseLocalTime(timestamp: string): Date {
+  // Handle undefined or invalid timestamps
+  if (!timestamp || typeof timestamp !== 'string') {
+    return new Date(); // Return current date as fallback
+  }
+  
   // Parse the timestamp components manually to avoid timezone conversion
   const [datePart, timePart] = timestamp.split(' ');
+  if (!datePart || !timePart) {
+    return new Date(); // Return current date as fallback
+  }
+  
   const [year, month, day] = datePart.split('-').map(Number);
   const [time, ms] = timePart.split('.');
   const [hours, minutes, seconds] = time.split(':').map(Number);
